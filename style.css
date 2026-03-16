@@ -1,0 +1,76 @@
+:root {
+    --bg: #0f172a;
+    --card-bg: #1e293b;
+    --primary: #6366f1;
+    --text-main: #f8fafc;
+    --text-dim: #94a3b8;
+    --code-bg: #000000;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Header & Nav */
+header {
+    padding: 1.5rem 10%;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav { display: flex; justify-content: space-between; align-items: center; }
+.logo { font-weight: bold; font-size: 1.5rem; letter-spacing: -1px; }
+.logo span { color: var(--primary); }
+nav ul { list-style: none; display: flex; gap: 2rem; }
+nav a { text-decoration: none; color: var(--text-main); font-weight: 500; }
+
+/* Hero */
+.hero { text-align: center; padding: 4rem 1rem; }
+.hero h1 { font-size: 3rem; margin-bottom: 0.5rem; }
+.hero p { color: var(--text-dim); font-size: 1.2rem; }
+
+/* Byte Card */
+.feed { max-width: 800px; margin: 0 auto; padding: 2rem; }
+.byte-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid #334155;
+    transition: transform 0.2s;
+}
+.byte-card:hover { transform: translateY(-5px); }
+
+.card-header { display: flex; justify-content: space-between; margin-bottom: 1rem; }
+.tag { background: var(--primary); padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+.date { color: var(--text-dim); font-size: 0.9rem; }
+
+/* Code Snippet */
+.code-container {
+    background: var(--code-bg);
+    padding: 1rem;
+    border-radius: 8px;
+    position: relative;
+    margin-top: 1.5rem;
+}
+code { font-family: 'Fira Code', monospace; color: #cbd5e1; font-size: 0.9rem; }
+.copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #334155;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.7rem;
+}
+.copy-btn:hover { background: var(--primary); }
