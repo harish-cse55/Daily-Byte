@@ -1,76 +1,126 @@
 :root {
-    --bg: #0f172a;
-    --card-bg: #1e293b;
-    --primary: #6366f1;
-    --text-main: #f8fafc;
+    --bg: #050810; /* Deeper, space black */
+    --card-bg: rgba(30, 41, 59, 0.7); /* Translucent glass */
+    --primary: #818cf8; /* Softer futuristic indigo */
+    --accent: #2dd4bf; /* Neon teal for contrast */
+    --text-main: #f1f5f9;
     --text-dim: #94a3b8;
-    --code-bg: #000000;
+    --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 body {
     background-color: var(--bg);
+    background-image: 
+        radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 0% 100%, rgba(45, 212, 191, 0.05) 0%, transparent 50%);
     color: var(--text-main);
     font-family: 'Inter', sans-serif;
     margin: 0;
-    line-height: 1.6;
+    padding: 0;
+    overflow-x: hidden;
 }
 
-/* Header & Nav */
+/* --- Clean Nav for Mobile --- */
 header {
-    padding: 1.5rem 10%;
-    background: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(10px);
+    padding: 1rem 5%;
+    background: rgba(5, 8, 16, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
 }
 
-nav { display: flex; justify-content: space-between; align-items: center; }
-.logo { font-weight: bold; font-size: 1.5rem; letter-spacing: -1px; }
-.logo span { color: var(--primary); }
-nav ul { list-style: none; display: flex; gap: 2rem; }
-nav a { text-decoration: none; color: var(--text-main); font-weight: 500; }
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-/* Hero */
-.hero { text-align: center; padding: 4rem 1rem; }
-.hero h1 { font-size: 3rem; margin-bottom: 0.5rem; }
-.hero p { color: var(--text-dim); font-size: 1.2rem; }
+.logo {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
 
-/* Byte Card */
-.feed { max-width: 800px; margin: 0 auto; padding: 2rem; }
+/* --- Responsive Typography --- */
+.hero h1 {
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    background: linear-gradient(to right, #fff, var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
+
+/* --- Futuristic Byte Cards --- */
+.feed {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 1rem; /* Reduced padding for mobile */
+}
+
 .byte-card {
     background: var(--card-bg);
-    border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border: 1px solid #334155;
-    transition: transform 0.2s;
-}
-.byte-card:hover { transform: translateY(-5px); }
-
-.card-header { display: flex; justify-content: space-between; margin-bottom: 1rem; }
-.tag { background: var(--primary); padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
-.date { color: var(--text-dim); font-size: 0.9rem; }
-
-/* Code Snippet */
-.code-container {
-    background: var(--code-bg);
-    padding: 1rem;
-    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
     position: relative;
-    margin-top: 1.5rem;
+    overflow: hidden;
 }
-code { font-family: 'Fira Code', monospace; color: #cbd5e1; font-size: 0.9rem; }
-.copy-btn {
+
+/* Glow effect on hover */
+.byte-card::before {
+    content: '';
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #334155;
-    border: none;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.7rem;
+    top: 0; left: 0; width: 4px; height: 100%;
+    background: var(--primary);
+    box-shadow: 0 0 15px var(--primary);
 }
-.copy-btn:hover { background: var(--primary); }
+
+.tag {
+    background: rgba(129, 140, 248, 0.2);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-family: 'Fira Code', monospace;
+}
+
+/* --- Mobile Alignment Tweaks --- */
+@media (max-width: 600px) {
+    header { padding: 1rem 1.2rem; }
+    nav ul { display: none; } /* Hide menu on mobile or use a burger menu */
+    
+    .byte-card {
+        padding: 1.2rem;
+        border-radius: 16px;
+    }
+
+    h2 { font-size: 1.25rem; }
+    
+    .code-container {
+        font-size: 0.8rem;
+        overflow-x: auto; /* Prevent code from breaking layout */
+        border-radius: 10px;
+    }
+
+    .copy-btn {
+        padding: 4px 8px;
+        font-size: 0.65rem;
+    }
+}
+
+/* --- Minimal Code Block --- */
+.code-container {
+    background: #000;
+    padding: 1.2rem;
+    margin-top: 1rem;
+    border: 1px solid #334155;
+    position: relative;
+}
+
+pre { margin: 0; }
+code { color: var(--accent); }
