@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HarishCodes | Daily Tech Bytes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <header>
         <nav>
             <div class="logo">HARISH<span>CODES</span></div>
-            <ul>
-                <li><a href="#daily">Daily Bytes</a></li>
+            <ul class="nav-links">
+                <li><a href="#daily">Bytes</a></li>
                 <li><a href="#resources">Resources</a></li>
-                <li><a href="contribute.html" class="admin-btn">Login</a></li>
+                <li><a href="manage-bytes.html" class="login-link">Admin</a></li>
             </ul>
         </nav>
     </header>
@@ -27,41 +27,72 @@
         </section>
 
         <section id="daily" class="feed">
+            <div id="loader">Fetching latest bytes...</div>
+            
             <article class="byte-card">
                 <div class="card-header">
-                    <span class="tag">#Linux</span>
+                    <span class="tag">#Welcome</span>
                     <span class="date">March 16, 2026</span>
                 </div>
-                <h2>Quickly Find & Delete Log Files</h2>
-                <p>Use this command to clean up your server space by removing all .log files in the current directory.</p>
-                
+                <h2>Starting the Journey</h2>
+                <p>Welcome to my knowledge hub. Check back daily for snippets and tips.</p>
                 <div class="code-container">
-                    <pre><code>find . -name "*.log" -delete</code></pre>
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                </div>
-            </article>
-
-            <article class="byte-card">
-                <div class="card-header">
-                    <span class="tag">#Android</span>
-                    <span class="date">March 15, 2026</span>
-                </div>
-                <h2>Jetpack Compose Spacer</h2>
-                <p>The cleanest way to add flexible spacing between elements in a Column.</p>
-                
-                <div class="code-container">
-                    <pre><code>Spacer(modifier = Modifier.height(16.dp))</code></pre>
+                    <pre><code>console.log("Hello, World!");</code></pre>
                     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                 </div>
             </article>
         </section>
     </main>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            // PASTE YOUR FIREBASE CONFIG HERE
+            apiKey: "YOUR_API_KEY",
+            authDomain: "harishcodes-in.firebaseapp.com",
+            projectId: "harishcodes-in",
+            storageBucket: "harishcodes-in.appspot.com",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const feedContainer = document.getElementById('daily');
+
+        // Real-time listener
+        const q = query(collection(db, "blogs"), orderBy("timestamp", "desc"));
+        onSnapshot(q, (snapshot) => {
+            feedContainer.innerHTML = ""; 
+            snapshot.forEach((doc) => renderByte(doc.data()));
+            if(snapshot.empty) feedContainer.innerHTML = "<p>No bytes found. Post something!</p>";
+        });
+
+        function renderByte(data) {
+            const card = `
+                <article class="byte-card">
+                    <div class="card-header">
+                        <span class="tag">#${data.tag || 'Tech'}</span>
+                        <span class="date">${data.date || ''}</span>
+                    </div>
+                    <h2>${data.title}</h2>
+                    <p>${data.content}</p>
+                    ${data.codeSnippet ? `
+                    <div class="code-container">
+                        <pre><code>${data.codeSnippet}</code></pre>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>` : ''}
+                </article>`;
+            feedContainer.innerHTML += card;
+        }
+    </script>
+
     <script>
         function copyCode(button) {
             const code = button.previousElementSibling.innerText;
             navigator.clipboard.writeText(code);
-            button.innerText = "Done!";
+            button.innerText = "Copied!";
             setTimeout(() => button.innerText = "Copy", 2000);
         }
     </script>
