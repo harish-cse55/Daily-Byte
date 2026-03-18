@@ -3,100 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HarishCodes | Daily Tech Bytes</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>HarishCodes | Digital Brain</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="bg-glow"></div>
 
     <header>
         <nav>
-            <div class="logo">HARISH<span>CODES</span></div>
-            <ul class="nav-links">
-                <li><a href="#daily">Bytes</a></li>
-                <li><a href="#resources">Resources</a></li>
-                <li><a href="manage-bytes.html" class="login-link">Admin</a></li>
-            </ul>
+            <div class="logo">HARISH<span>//CODES</span></div>
+            <div class="nav-links">
+                <a href="#daily">Bytes</a>
+                <a href="#resources">Tools</a>
+                <a href="manage.html" class="btn-glow">Admin</a>
+            </div>
         </nav>
     </header>
 
     <main>
         <section class="hero">
-            <h1>Daily Tech Bytes</h1>
-            <p>One useful command, snippet, or tip every single day.</p>
+            <div class="badge">SYSTEM ONLINE</div>
+            <h1>The Daily <span>Byte</span></h1>
+            <p>Mapping the digital frontier, one snippet at a time.</p>
         </section>
 
         <section id="daily" class="feed">
-            <div id="loader">Fetching latest bytes...</div>
-            
-            <article class="byte-card">
-                <div class="card-header">
-                    <span class="tag">#Welcome</span>
-                    <span class="date">March 16, 2026</span>
+            <article class="glass-card">
+                <div class="card-top">
+                    <span class="category">#ENGINEERING</span>
+                    <span class="timestamp">18 MAR 2026</span>
                 </div>
-                <h2>Starting the Journey</h2>
-                <p>Welcome to my knowledge hub. Check back daily for snippets and tips.</p>
-                <div class="code-container">
-                    <pre><code>console.log("Hello, World!");</code></pre>
-                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <h2>Optimizing DNS Propagation</h2>
+                <p>Reduced TTL values to 3600 ensures global name servers refresh your records every hour, minimizing downtime during migrations.</p>
+                <div class="code-box">
+                    <div class="code-header">
+                        <span>bash</span>
+                        <button onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>nslookup -type=any harishcodes.in</code></pre>
                 </div>
             </article>
         </section>
     </main>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-    
-
-         const firebaseConfig = {
-            apiKey: "AIzaSyCaeOpiB8z_jJ8m3gmfBiREJyqt2PaqdLQ",
-            authDomain: "libr-68752.firebaseapp.com",
-            projectId: "libr-68752",
-            storageBucket: "libr-68752.firebasestorage.app",
-            messagingSenderId: "395424150999",
-            appId: "1:395424150999:web:d874350d01ae5c90a8c792"
-        };
-
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const feedContainer = document.getElementById('daily');
-
-        // Real-time listener
-        const q = query(collection(db, "blogs"), orderBy("timestamp", "desc"));
-        onSnapshot(q, (snapshot) => {
-            feedContainer.innerHTML = ""; 
-            snapshot.forEach((doc) => renderByte(doc.data()));
-            if(snapshot.empty) feedContainer.innerHTML = "<p>No bytes found. Post something!</p>";
-        });
-
-        function renderByte(data) {
-            const card = `
-                <article class="byte-card">
-                    <div class="card-header">
-                        <span class="tag">#${data.tag || 'Tech'}</span>
-                        <span class="date">${data.date || ''}</span>
-                    </div>
-                    <h2>${data.title}</h2>
-                    <p>${data.content}</p>
-                    ${data.codeSnippet ? `
-                    <div class="code-container">
-                        <pre><code>${data.codeSnippet}</code></pre>
-                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                    </div>` : ''}
-                </article>`;
-            feedContainer.innerHTML += card;
-        }
-    </script>
-
     <script>
-        function copyCode(button) {
-            const code = button.previousElementSibling.innerText;
+        function copyCode(btn) {
+            const code = btn.parentElement.nextElementSibling.innerText;
             navigator.clipboard.writeText(code);
-            button.innerText = "Copied!";
-            setTimeout(() => button.innerText = "Copy", 2000);
+            btn.innerText = "COPIED";
+            btn.style.color = "#2dd4bf";
+            setTimeout(() => { btn.innerText = "COPY"; btn.style.color = ""; }, 2000);
         }
     </script>
 </body>
