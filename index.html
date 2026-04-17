@@ -3,98 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HarishCodes | Career Success Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <title>HarishCodes | Digital Career Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="bg-gradient"></div>
+    <div class="bg-blur"></div>
 
     <header>
         <nav>
             <div class="logo">HARISH<span>//HUB</span></div>
-            <div class="nav-links">
-                <button onclick="filterContent('jobs')" class="nav-btn active">Jobs</button>
-                <button onclick="filterContent('roadmaps')" class="nav-btn">Roadmaps</button>
-                <button onclick="filterContent('prep')" class="nav-btn">Interview Prep</button>
-                <a href="admin.html" class="admin-icon">⚙️</a>
+            <div class="nav-tabs">
+                <button onclick="loadSection('jobs')" class="t-btn active">Job Leads</button>
+                <button onclick="loadSection('roadmaps')" class="t-btn">Roadmaps</button>
+                <button onclick="loadSection('prep')" class="t-btn">Interview Prep</button>
             </div>
+            <a href="admin.html" class="admin-link">Dashboard</a>
         </nav>
     </header>
 
-    <main class="container">
+    <main id="main-content">
         <section class="hero">
-            <div id="hero-tag" class="badge">SYSTEM READY</div>
-            <h1 id="hero-title">Your Bridge to <span>Industry.</span></h1>
-            <p id="hero-desc">Curated job leads, Gen-AI roadmaps, and interview hacks for modern freshers.</p>
+            <span class="status-dot"></span> LIVE FOR 2026 BATCH
+            <h1 id="page-title">Off-Campus <span>Job Leads</span></h1>
+            <p id="page-desc">Curated engineering roles for freshers, updated manually daily.</p>
         </section>
 
-        <section id="main-feed" class="content-grid">
-            <div class="loader">Initialising Database...</div>
-        </section>
+        <div id="feed-container" class="grid-feed">
+            <div class="loading">Booting Hub...</div>
+        </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            // PASTE YOUR FIREBASE CONFIG HERE
-            apiKey: "...",
-            authDomain: "harishcodes-in.firebaseapp.com",
-            projectId: "harishcodes-in",
-            appId: "..."
-        };
-
+        const firebaseConfig = { /* PASTE YOUR CONFIG HERE */ };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const feed = document.getElementById('main-feed');
 
-        // Main Fetch Logic
-        window.filterContent = (type) => {
-            // Update UI buttons
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        window.loadSection = (type) => {
+            // Update UI
+            document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
-
-            const q = query(collection(db, type), orderBy("timestamp", "desc"));
             
+            const title = document.getElementById('page-title');
+            const desc = document.getElementById('page-desc');
+
+            if(type === 'jobs') {
+                title.innerHTML = "Off-Campus <span>Job Leads</span>";
+                desc.innerText = "The best entry-level roles from LinkedIn and Twitter, filtered for you.";
+            } else if(type === 'roadmaps') {
+                title.innerHTML = "Modern <span>Roadmaps</span>";
+                desc.innerText = "Step-by-step guides for AI, Android, and Full-Stack in 2026.";
+            } else {
+                title.innerHTML = "Interview <span>Vault</span>";
+                desc.innerText = "Daily technical questions and code snippets to crack your next round.";
+            }
+
+            // Real-time Fetch
+            const q = query(collection(db, type), orderBy("timestamp", "desc"));
             onSnapshot(q, (snapshot) => {
-                feed.innerHTML = "";
+                const container = document.getElementById('feed-container');
+                container.innerHTML = "";
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    if(type === 'jobs') feed.innerHTML += renderJobCard(data);
-                    else if(type === 'roadmaps') feed.innerHTML += renderRoadmapCard(data);
-                    else feed.innerHTML += renderPrepCard(data);
+                    container.innerHTML += type === 'jobs' ? renderJob(data) : 
+                                           type === 'roadmaps' ? renderRoadmap(data) : renderPrep(data);
                 });
             });
         };
 
-        function renderJobCard(d) {
-            return `
-                <div class="glass-card job-anim">
-                    <div class="card-tag">OFF-CAMPUS</div>
-                    <h3>${d.title}</h3>
-                    <p class="company">${d.company} • ${d.batch}</p>
-                    <div class="card-footer">
-                        <span>Posted ${d.date}</span>
-                        <a href="${d.url}" target="_blank" class="apply-btn">Apply Now</a>
-                    </div>
-                </div>`;
-        }
+        const renderJob = (d) => `
+            <div class="card job-card">
+                <div class="badge">FRESHER</div>
+                <h3>${d.title} @ ${d.company}</h3>
+                <p>Batch: ${d.batch}</p>
+                <div class="card-footer">
+                    <span>${d.date}</span>
+                    <a href="${d.url}" target="_blank" class="btn-p">Apply</a>
+                </div>
+            </div>`;
 
-        function renderRoadmapCard(d) {
-            return `
-                <div class="glass-card roadmap-anim">
-                    <div class="card-tag roadmap">ROADMAP</div>
-                    <h3>${d.title}</h3>
-                    <p>${d.description}</p>
-                    <ul class="steps">${d.steps.map(s => `<li>${s}</li>`).join('')}</ul>
-                    <a href="${d.fullPath}" class="view-link">View Full Path →</a>
-                </div>`;
-        }
+        const renderRoadmap = (d) => `
+            <div class="card rm-card">
+                <h3>${d.title}</h3>
+                <p>${d.desc}</p>
+                <ul class="steps">${d.steps.split(',').map(s => `<li>${s.trim()}</li>`).join('')}</ul>
+                <a href="${d.link}" class="btn-s">View Path</a>
+            </div>`;
+
+        const renderPrep = (d) => `
+            <div class="card prep-card">
+                <div class="badge prep">INTERVIEW</div>
+                <h3>${d.question}</h3>
+                <div class="code-box"><code>${d.code}</code></div>
+                <p>${d.answer}</p>
+            </div>`;
 
         // Initial Load
-        filterContent('jobs');
+        loadSection('jobs');
     </script>
 </body>
 </html>
