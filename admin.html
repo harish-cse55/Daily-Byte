@@ -65,11 +65,25 @@
         const db = getFirestore(app);
 
         // --- Auth Logic ---
-        window.login = () => {
-            const e = document.getElementById('adminEmail').value;
-            const p = document.getElementById('adminPass').value;
-            signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
-        };
+      
+
+
+        window.login = async () => {
+    console.log("Button clicked!"); // If you don't see this in F12 console, the button is broken.
+    
+    const email = document.getElementById('adminEmail').value;
+    const pass = document.getElementById('adminPass').value;
+
+    console.log("Attempting login for:", email);
+
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+        console.log("Success!", userCredential.user);
+    } catch (error) {
+        console.error("Login failed:", error.code, error.message);
+        alert("Error: " + error.message);
+    }
+};
 
         window.logout = () => signOut(auth);
 
