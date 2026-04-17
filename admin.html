@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HarishCodes | Admin Command</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+    <div id="login-overlay" class="overlay">
+        <div class="glass-card auth-card">
+            <h2>Admin Login</h2>
+            <input type="email" id="adminEmail" placeholder="Email">
+            <input type="password" id="adminPass" placeholder="Password">
+            <button onclick="login()" class="btn-primary">Initialize Access</button>
+        </div>
+    </div>
+
+    <div class="dashboard" id="dashboard" style="display:none;">
+        <header class="admin-nav">
+            <div class="logo">HARISH<span>//ADMIN</span></div>
+            <button onclick="logout()" class="btn-outline">Logout</button>
+        </header>
+
+        <main class="admin-grid">
+            <aside class="controls">
+                <button onclick="switchTab('job')" class="tab-btn active">Post Job</button>
+                <button onclick="switchTab('roadmap')" class="tab-btn">Post Roadmap</button>
+                <button onclick="switchTab('prep')" class="tab-btn">Interview Prep</button>
+            </aside>
+
+            <section class="form-viewer">
+                <form id="job-form" class="admin-form active-form">
+                    <h3>Broadcast Job Lead</h3>
+                    <div class="input-group">
+                        <input type="text" id="jobTitle" placeholder="Job Title (e.g., SDE Intern)" required>
+                        <input type="text" id="jobCompany" placeholder="Company Name" required>
+                    </div>
+                    <input type="text" id="jobBatch" placeholder="Batches (e.g., 2025/2026)" required>
+                    <input type="url" id="jobLink" placeholder="Application URL" required>
+                    <button type="submit" class="btn-broadcast">🚀 Push to Live Site</button>
+                </form>
+
+                <form id="roadmap-form" class="admin-form">
+                    <h3>Update Career Roadmap</h3>
+                    <input type="text" id="roadmapTitle" placeholder="Roadmap Title (e.g., Android Dev)">
+                    <textarea id="roadmapDesc" placeholder="Short summary of this path..."></textarea>
+                    <textarea id="roadmapSteps" placeholder="Step 1, Step 2, Step 3 (Comma separated)"></textarea>
+                    <button type="submit" class="btn-broadcast">🗺️ Update Roadmap</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "harishcodes-in.firebaseapp.com",
+            projectId: "harishcodes-in",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getFirestore(app);
+
+        // --- Auth Logic ---
+        window.login = () => {
+            const e = document.getElementById('adminEmail').value;
+            const p = document.getElementById('adminPass').value;
+            signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
+        };
+
+        window.logout = () => signOut(auth);
+
+        onAuthStateChanged(auth, (user) => {
+            if (
