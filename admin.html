@@ -58,12 +58,7 @@
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "harishcodes-in.firebaseapp.com",
-            projectId: "harishcodes-in",
-            appId: "YOUR_APP_ID"
-        };
+        const firebaseConfig = { const firebaseConfig = { apiKey: "AIzaSyCaeOpiB8z_jJ8m3gmfBiREJyqt2PaqdLQ", authDomain: "libr-68752.firebaseapp.com", databaseURL: "https://libr-68752.firebaseio.com", projectId: "libr-68752", storageBucket: "libr-68752.firebasestorage.app", messagingSenderId: "395424150999", appId: "1:395424150999:web:d874350d01ae5c90a8c792", measurementId: "G-583EWMYB0V" };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth();
@@ -79,4 +74,43 @@
         window.logout = () => signOut(auth);
 
         onAuthStateChanged(auth, (user) => {
-            if (
+            if (user) {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+            } else {
+                document.getElementById('login-overlay').style.display = 'flex';
+                document.getElementById('dashboard').style.display = 'none';
+            }
+        });
+
+        // --- Data Push Logic ---
+        document.getElementById('job-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Broadcasting...";
+
+            try {
+                await addDoc(collection(db, "jobs"), {
+                    title: document.getElementById('jobTitle').value,
+                    company: document.getElementById('jobCompany').value,
+                    batch: document.getElementById('jobBatch').value,
+                    url: document.getElementById('jobLink').value,
+                    timestamp: serverTimestamp(),
+                    date: new Date().toLocaleDateString('en-IN')
+                });
+                alert("Job Live!");
+                e.target.reset();
+            } catch (err) { alert(err.message); }
+            btn.innerText = "🚀 Push to Live Site";
+        });
+
+        // Tab Switching
+        window.switchTab = (tab) => {
+            document.querySelectorAll('.admin-form').forEach(f => f.classList.remove('active-form'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`${tab}-form`).classList.add('active-form');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
